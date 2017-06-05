@@ -9,7 +9,7 @@ let campaigns = require('../lib/models/campaigns');
 let subscriptions = require('../lib/models/subscriptions');
 let settings = require('../lib/models/settings');
 let tools = require('../lib/tools');
-let helpers = require('../lib/helpers');
+let editorHelpers = require('../lib/editor-helpers.js');
 let striptags = require('striptags');
 let passport = require('../lib/passport');
 let htmlescape = require('escape-html');
@@ -186,25 +186,14 @@ router.get('/edit/:id', passport.csrfProtection, (req, res, next) => {
                             view = 'campaigns/edit';
                     }
 
-                    helpers.getDefaultMergeTags((err, defaultMergeTags) => {
+                    editorHelpers.getMergeTagsForResource(campaign, (err, mergeTags) => {
                         if (err) {
                             req.flash('danger', err.message || err);
                             return res.redirect('/');
                         }
 
-                        helpers.getListMergeTags(campaign.list, (err, listMergeTags) => {
-                            if (err) {
-                                req.flash('danger', err.message || err);
-                                return res.redirect('/');
-                            }
-
-                            campaign.mergeTags = defaultMergeTags.concat(listMergeTags);
-                            campaign.type === 2 && campaign.mergeTags.push({
-                                key: 'RSS_ENTRY',
-                                value: _('content from an RSS entry')
-                            });
-                            res.render(view, campaign);
-                        });
+                        campaign.mergeTags = mergeTags;
+                        res.render(view, campaign);
                     });
                 });
             });
@@ -556,7 +545,7 @@ router.post('/clicked/ajax/:id/:linkId', (req, res) => {
             let campaignCid = campaign.cid;
             let listCid = list.cid;
 
-            let columns = ['#', 'email', 'first_name', 'last_name', 'campaign_tracker__' + campaign.id + '`.`created', 'count'];
+            let columns = ['#', 'email', 'first_name', 'last_name', 'campaign_tracker__' + campaign.id + '.created', 'count'];
             campaigns.filterClickedSubscribers(campaign, linkId, req.body, columns, (err, data, total, filteredTotal) => {
                 if (err) {
                     return res.json({
@@ -645,7 +634,7 @@ router.post('/status/ajax/:id/:status', (req, res) => {
             let campaignCid = campaign.cid;
             let listCid = list.cid;
 
-            let columns = ['#', 'email', 'first_name', 'last_name', 'campaign__' + campaign.id + '`.`updated'];
+            let columns = ['#', 'email', 'first_name', 'last_name', 'campaign__' + campaign.id + '.updated'];
             campaigns.filterStatusSubscribers(campaign, status, req.body, columns, (err, data, total, filteredTotal) => {
                 if (err) {
                     return res.json({
@@ -694,7 +683,7 @@ router.post('/clicked/ajax/:id/:linkId', (req, res) => {
             let campaignCid = campaign.cid;
             let listCid = list.cid;
 
-            let columns = ['#', 'email', 'first_name', 'last_name', 'campaign_tracker__' + campaign.id + '`.`created', 'count'];
+            let columns = ['#', 'email', 'first_name', 'last_name', 'campaign_tracker__' + campaign.id + '.created', 'count'];
             campaigns.filterClickedSubscribers(campaign, linkId, req.body, columns, (err, data, total, filteredTotal) => {
                 if (err) {
                     return res.json({
