@@ -329,4 +329,35 @@ router.post('/zone-mta/sender-config', (req, res) => {
     });
 });
 
+router.post('/postal', (req, res, next) => {
+    let evt = req.body;
+    let campaign_id = evt.payload.message.message_id.split('@').shift();
+    if (campaign_id === undefined) {
+        return;
+    }
+    campaigns.findMailByCampaign(campaign_id, (err, message) => {
+        if (err || !message) {
+            return;
+        }
+
+        switch (evt.event) {
+            case 'MessageHeld':
+            case 'MessageDeliveryFailed':
+                return campaigns.updateMessage(message, 'bounced', true, (err, updated) => {
+                    if (err) {
+                        log.error('Mailgun', 'Failed updating message: %s', err);
+                    } else if (updated) {
+                        log.verbose('Mailgun', 'Marked message %s as bounced', campaign_id);
+                    }
+                });
+        }
+
+    });
+
+    return res.json({
+        success: true
+    });
+});
+
+
 module.exports = router;

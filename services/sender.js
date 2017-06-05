@@ -415,7 +415,9 @@ function formatMessage(message, callback) {
                                         'List-ID': {
                                             prepared: true,
                                             value: libmime.encodeWords(list.name) + ' <' + list.cid + '.' + (url.parse(configItems.serviceUrl).hostname || 'localhost') + '>'
-                                        }
+                                        },
+                                        // custom header for Postal support
+                                        'Message-ID': ' <' + campaignAddress + '@' + 'mailtrain.com' + '>',
                                     },
                                     list: {
                                         unsubscribe: url.resolve(configItems.serviceUrl, '/subscription/' + list.cid + '/unsubscribe/' + message.subscription.cid + '?auto=yes')
