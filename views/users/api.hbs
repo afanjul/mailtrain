@@ -244,3 +244,25 @@
 
 <pre>curl -XPOST {{serviceUrl}}api/subcription/B16uVTdW/changeEmail?access_token={{accessToken}} \
 --data 'EMAIL=test@example.com&amp;NEW_EMAIL=newemail@example.com'</pre>
+
+<h3>GET /api/subscriptions/:listId – {{#translate}}Get subscribers from list{{/translate}}</h3>
+
+<p>
+    {{#translate}}This API call get list of subscribers.{{/translate}}
+</p>
+
+<p>
+    <strong>GET</strong> {{#translate}}arguments{{/translate}}
+</p>
+<ul>
+    <li><strong>access_token</strong> – {{#translate}}your personal access token{{/translate}}
+    <li><strong>start</strong> – {{#translate}}Start position{{/translate}} (<em>{{#translate}}optional, default 0{{/translate}}</em>)</li>
+    <li><strong>limit</strong> – {{#translate}}limit subscribers count in response{{/translate}} (<em>{{#translate}}optional, default 10000{{/translate}}</em>)</li>
+    <li><strong>queryData</strong> – {{#translate}}Where clause and values{{/translate}} (<em>{{#translate}}optional, default null{{/translate}}</em>)</li>
+</ul>
+
+<p>
+    <strong>{{#translate}}Example{{/translate}}</strong>
+</p>
+
+<pre>curl -XGET '{{serviceUrl}}api/subscriptions/B16uVTdW?access_token={{accessToken}}&limit=10&start=0&queryData%5BwhereClause%5D=status%3D%3Astatus&queryData%5BwhereValues%5D%5B%3Astatus%5D=2' </pre>

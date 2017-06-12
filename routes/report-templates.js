@@ -209,7 +209,7 @@ router.get('/create', passport.csrfProtection, (req, res) => {
             ']';
 
         if (!('js' in data)) data.js =
-            'subscriptions.list(inputs.list.id,0,0, (err, results) => {\n' +
+            'subscriptions.list(inputs.list.id,0,0,null, (err, results) => {\n' +
             '    if (err) {\n' +
             '        return callback(err);\n' +
             '    }\n' +

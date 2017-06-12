@@ -517,4 +517,27 @@ router.post('/subscription/:listId/changeEmail', (req, res) => {
 	});
 });
 
+router.get('/subscriptions/:listId', (req, res) => {
+	let start = parseInt(req.query.start || 0, 10);
+	let limit = parseInt(req.query.limit || 10000, 10);
+	let queryData = req.query.queryData || null;
+	
+	subscriptions.list(req.params.listId, start, limit, queryData, (err, subscriptions, total) => {
+		if (err) {
+			res.status(500);
+			return res.json({
+				error: err.message || err,
+				data: []
+			});
+		}
+		res.status(200);
+		res.json({
+			total: total,
+			start: start,
+			limit: limit,
+			subscriptions: rows,
+		});
+	});
+});
+
 module.exports = router;
