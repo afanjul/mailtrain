@@ -522,7 +522,7 @@ router.get('/subscriptions/:listId', (req, res) => {
 	let limit = parseInt(req.query.limit || 10000, 10);
 	let queryData = req.query.queryData || null;
 	
-	subscriptions.list(req.params.listId, start, limit, queryData, (err, subscriptions, total) => {
+	lists.getByCid(req.params.listId, (err, list) => {
 		if (err) {
 			res.status(500);
 			return res.json({
@@ -530,14 +530,31 @@ router.get('/subscriptions/:listId', (req, res) => {
 				data: []
 			});
 		}
-		res.status(200);
-		res.json({
-			total: total,
-			start: start,
-			limit: limit,
-			subscriptions: rows,
+		if (!list) {
+            res.status(404);
+            return res.json({
+                error: 'Selected listId not found',
+                data: []
+            });
+        }
+		subscriptions.list(list.id, start, limit, queryData, (err, subscriptions, total) => {
+			if (err) {
+				res.status(500);
+				return res.json({
+					error: err.message || err,
+					data: []
+				});
+			}
+			res.status(200);
+			res.json({
+				total: total,
+				start: start,
+				limit: limit,
+				subscriptions: rows,
+			});
 		});
 	});
+	
 });
 
 module.exports = router;
