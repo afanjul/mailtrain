@@ -443,4 +443,78 @@ router.get('/blacklist/get', (req, res) => {
     });
 });
 
+router.post('/subscription/:listId/changeEmail', (req, res) => {
+	let input = {};
+    Object.keys(req.body).forEach(key => {
+        input[(key || '').toString().trim().toUpperCase()] = (req.body[key] || '').toString().trim();
+    });
+	lists.getByCid(req.params.listId, (err, list) => {
+        if (err) {
+            log.error('API', err);
+            res.status(500);
+            return res.json({
+                error: err.message || err,
+                data: []
+            });
+        }
+        if (!list) {
+            res.status(404);
+            return res.json({
+                error: 'Selected listId not found',
+                data: []
+            });
+        }
+		if (!input.EMAIL) {
+            res.status(400);
+            return res.json({
+                error: 'Missing EMAIL',
+                data: []
+            });
+        }
+		if (!input.NEW_EMAIL) {
+            res.status(400);
+            return res.json({
+                error: 'Missing NEW_EMAIL',
+                data: []
+            });
+        }
+		subscriptions.getByEmail(list.id, input.EMAIL, (err, subscription) => {
+			if (err) {
+				log.error('API', err);
+				res.status(500);
+				return res.json({
+					error: err.message || err,
+					data: []
+				});
+			}
+			if (!subscription) {
+				res.status(404);
+				return res.json({
+					error: 'Subscription with given email not found',
+					data: []
+				});
+			}
+			const data = {
+				'EMAIL' => input.NEW_EMAIL
+			};
+			subscriptions.update(list.id, subscription.cid, data, true, (err, found) => {
+				if (err) {
+					log.error('API', err);
+					res.status(500);
+					return res.json({
+						error: err.message || err,
+						data: []
+					});
+				}
+				res.json({
+                    data: {
+                        id: subscription.id,
+                        changed_mail: true
+                    }
+                })
+			});
+		});
+	});
+});
+
 module.exports = router;

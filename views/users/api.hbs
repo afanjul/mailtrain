@@ -217,3 +217,30 @@
 
 <pre>curl -XPOST '{{serviceUrl}}api/blacklist/delete?access_token={{accessToken}}' \
 --data 'EMAIL=test@example.com&amp;'</pre>
+
+<h3>POST /api/subscription/:listId/changeEmail – {{#translate}}Updates subscriber's email{{/translate}}</h3>
+
+<p>
+    {{#translate}}This API call updates subscriber's email{{/translate}}
+</p>
+
+<p>
+    <strong>GET</strong> {{#translate}}arguments{{/translate}}
+</p>
+<ul>
+    <li><strong>access_token</strong> – {{#translate}}your personal access token{{/translate}}
+</ul>
+
+<p>
+    <strong>POST</strong> {{#translate}}arguments{{/translate}}
+</p>
+<ul>
+    <li><strong>EMAIL</strong> – {{#translate}}subscriber's email address{{/translate}} (<em>{{#translate}}required{{/translate}}</em>)</li>
+    <li><strong>NEW_EMAIL</strong> – {{#translate}}subscriber's new email address{{/translate}}</li>
+</ul>
+<p>
+    <strong>{{#translate}}Example{{/translate}}</strong>
+</p>
+
+<pre>curl -XPOST {{serviceUrl}}api/subcription/B16uVTdW/changeEmail?access_token={{accessToken}} \
+--data 'EMAIL=test@example.com&amp;NEW_EMAIL=newemail@example.com'</pre>
