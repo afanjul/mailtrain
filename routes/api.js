@@ -537,7 +537,7 @@ router.get('/subscriptions/:listId', (req, res) => {
                 data: []
             });
         }
-		subscriptions.list(list.id, start, limit, queryData, (err, subscriptions, total) => {
+		subscriptions.list(list.id, start, limit, queryData, (err, rows, total) => {
 			if (err) {
 				res.status(500);
 				return res.json({
