@@ -495,7 +495,7 @@ router.post('/subscription/:listId/changeEmail', (req, res) => {
 				});
 			}
 			const data = {
-				'EMAIL': input.NEW_EMAIL
+				email: input.NEW_EMAIL
 			};
 			subscriptions.update(list.id, subscription.cid, data, true, (err, found) => {
 				if (err) {
