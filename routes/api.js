@@ -545,12 +545,43 @@ router.get('/subscriptions/:listId', (req, res) => {
 					data: []
 				});
 			}
+			let subscriptionsData = [];
+			fields.list(list.id, (err, fieldList) => {
+                if (err && !fieldList) {
+                    fieldList = [];
+				}
+				rows.forEach( (row, index) => {
+					subscriptionsData[index] = {
+						'EMAIL': row['email'],
+						'FIRST_NAME': row['first_name'],
+						'LAST_NAME': row['last_name'],
+						'STATUS': row['status'],
+						'STATUS_CHANGED': row['statusChanged'],
+						'IS_TEST': row['isTest']
+					};
+					fieldList.forEach(field => {
+						if (row.hasOwnProperty(field.column) && field.key) {
+							subscriptionsData[index][field.key] = row[field.column];
+						} else if (field.options) {
+							for (let i = 0, len = field.options.length; i < len; i++) {
+								if (row.hasOwnProperty(field.options[i].column) && field.options[i].key) {
+									let value = row[field.options[i].column];
+									if (field.options[i].type === 'option') {
+										value = ['false', 'no', '0', ''].indexOf((value || '').toString().trim().toLowerCase()) >= 0 ? '' : '1';
+									}
+									subscriptionsData[index][field.options[i].key] = value;
+								}
+							}
+						}
+					});
+				});
+			});
 			res.status(200);
 			res.json({
 				total: total,
 				start: start,
 				limit: limit,
-				subscriptions: rows,
+				subscriptions: subscriptionsData,
 			});
 		});
 	});
