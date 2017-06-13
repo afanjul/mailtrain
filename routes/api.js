@@ -560,12 +560,12 @@ router.get('/subscriptions/:listId', (req, res) => {
 						'IS_TEST': row['isTest']
 					};
 					fieldList.forEach(field => {
-						if (row.hasOwnProperty(field.column) && field.key) {
-							subscriptionsData[index][field.key] = row[field.column];
+						if (row.hasOwnProperty(tools.fromDbKey(field.column)) && field.key) {
+							subscriptionsData[index][field.key] = row[tools.fromDbKey(field.column)];
 						} else if (field.options) {
 							for (let i = 0, len = field.options.length; i < len; i++) {
-								if (row.hasOwnProperty(field.options[i].column) && field.options[i].key) {
-									let value = row[field.options[i].column];
+								if (row.hasOwnProperty(tools.fromDbKey(field.options[i].column)) && field.options[i].key) {
+									let value = row[tools.fromDbKey(field.options[i].column)];
 									if (field.options[i].type === 'option') {
 										value = ['false', 'no', '0', ''].indexOf((value || '').toString().trim().toLowerCase()) >= 0 ? '' : '1';
 									}
