@@ -553,10 +553,10 @@ router.get('/subscriptions/:listId', (req, res) => {
 				rows.forEach( (row, index) => {
 					subscriptionsData[index] = {
 						'EMAIL': row['email'],
-						'FIRST_NAME': row['first_name'],
-						'LAST_NAME': row['last_name'],
+						'FIRST_NAME': row['firstName'],
+						'LAST_NAME': row['lastName'],
 						'STATUS': row['status'],
-						'STATUS_CHANGED': row['statusChanged'],
+						'STATUS_CHANGE': row['statusChange'],
 						'IS_TEST': row['isTest']
 					};
 					fieldList.forEach(field => {
@@ -575,13 +575,13 @@ router.get('/subscriptions/:listId', (req, res) => {
 						}
 					});
 				});
-			});
-			res.status(200);
-			res.json({
-				total: total,
-				start: start,
-				limit: limit,
-				subscriptions: subscriptionsData,
+                res.status(200);
+                res.json({
+                    total: total,
+                    start: start,
+                    limit: limit,
+                    subscriptions: subscriptionsData,
+                });
 			});
 		});
 	});
