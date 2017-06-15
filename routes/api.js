@@ -497,7 +497,7 @@ router.post('/subscription/:listId/changeEmail', (req, res) => {
 			const data = {
 				email: input.NEW_EMAIL
 			};
-			subscriptions.update(list.id, subscription.cid, data, true, (err, found) => {
+			subscriptions.update(list.id, subscription.cid, data, true, true, (err, found) => {
 				if (err) {
 					log.error('API', err);
 					res.status(500);
