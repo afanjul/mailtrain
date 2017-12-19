@@ -418,10 +418,7 @@ function formatMessage(message, callback) {
                                             value: libmime.encodeWords(list.name) + ' <' + list.cid + '.' + (url.parse(configItems.serviceUrl).hostname || 'localhost') + '>'
                                         },
                                         // custom header for Postal support
-                                        'Message-ID':  {
-                                            prepared: true,
-                                            value: '<' + campaignAddress + '@' + (url.parse(configItems.serviceUrl).hostname || 'localhost') + '>'
-                                        },
+                                        'Message-ID': '<' + campaignAddress + '@' + (url.parse(configItems.serviceUrl).hostname || 'localhost') + '>',
                                     },
                                     list: {
                                         unsubscribe: url.resolve(configItems.serviceUrl, '/subscription/' + list.cid + '/unsubscribe/' + message.subscription.cid)
