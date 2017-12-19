@@ -484,7 +484,7 @@ router.post('/subscription/delete', passport.parseForm, passport.csrfProtection,
 
 router.post('/subscription/edit', passport.parseForm, passport.csrfProtection, (req, res) => {
     req.body['is-test'] = req.body['is-test'] ? '1' : '0';
-    subscriptions.update(req.body.list, req.body.cid, req.body, true, (err, updated) => {
+    subscriptions.update(req.body.list, req.body.cid, req.body, true, false, (err, updated) => {
 
         if (err) {
             if (err.code === 'ER_DUP_ENTRY') {

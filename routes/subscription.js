@@ -549,7 +549,7 @@ router.post('/:lcid/manage', passport.parseForm, passport.csrfProtection, (req, 
                 return next(err);
             }
 
-            subscriptions.update(list.id, subscription.cid, req.body, false, err => {
+            subscriptions.update(list.id, subscription.cid, req.body, false, true, err => {
                 if (err) {
                     return next(err);
                 }

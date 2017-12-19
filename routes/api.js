@@ -497,7 +497,7 @@ router.post('/subscription/:listId/changeEmail', (req, res) => {
 			const data = {
 				email: input.NEW_EMAIL
 			};
-			subscriptions.update(list.id, subscription.cid, data, true, (err, found) => {
+			subscriptions.update(list.id, subscription.cid, data, true, true, (err, found) => {
 				if (err) {
 					log.error('API', err);
 					res.status(500);
@@ -553,19 +553,19 @@ router.get('/subscriptions/:listId', (req, res) => {
 				rows.forEach( (row, index) => {
 					subscriptionsData[index] = {
 						'EMAIL': row['email'],
-						'FIRST_NAME': row['first_name'],
-						'LAST_NAME': row['last_name'],
+						'FIRST_NAME': row['firstName'],
+						'LAST_NAME': row['lastName'],
 						'STATUS': row['status'],
-						'STATUS_CHANGED': row['statusChanged'],
+						'STATUS_CHANGE': row['statusChange'],
 						'IS_TEST': row['isTest']
 					};
 					fieldList.forEach(field => {
-						if (row.hasOwnProperty(field.column) && field.key) {
-							subscriptionsData[index][field.key] = row[field.column];
+						if (row.hasOwnProperty(tools.fromDbKey(field.column)) && field.key) {
+							subscriptionsData[index][field.key] = row[tools.fromDbKey(field.column)];
 						} else if (field.options) {
 							for (let i = 0, len = field.options.length; i < len; i++) {
-								if (row.hasOwnProperty(field.options[i].column) && field.options[i].key) {
-									let value = row[field.options[i].column];
+								if (row.hasOwnProperty(tools.fromDbKey(field.options[i].column)) && field.options[i].key) {
+									let value = row[tools.fromDbKey(field.options[i].column)];
 									if (field.options[i].type === 'option') {
 										value = ['false', 'no', '0', ''].indexOf((value || '').toString().trim().toLowerCase()) >= 0 ? '' : '1';
 									}
@@ -575,13 +575,13 @@ router.get('/subscriptions/:listId', (req, res) => {
 						}
 					});
 				});
-			});
-			res.status(200);
-			res.json({
-				total: total,
-				start: start,
-				limit: limit,
-				subscriptions: subscriptionsData,
+                res.status(200);
+                res.json({
+                    total: total,
+                    start: start,
+                    limit: limit,
+                    subscriptions: subscriptionsData,
+                });
 			});
 		});
 	});
